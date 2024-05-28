@@ -7,7 +7,6 @@ pool:
     demands:
      - DOCKER -equals YES
 
-
 stages:
     - stage: BuildingJavaCode
       jobs:
