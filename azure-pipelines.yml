@@ -53,52 +53,7 @@ stages:
              OverWrite: true
           continueOnError: true          
               
-    - stage: CopyingArtifactsToAzureAndAws
-      jobs:
-      - job: CopyFilesToAzureBlob
-        timeoutInMinutes: 10
-        steps:
-        - checkout: none
-
-        - task: AzureCLI@2
-          inputs:
-            azureSubscription: 'devopsb19-azure-connection'
-            scriptType: 'bash'
-            scriptLocation: 'inlineScript'
-            inlineScript: 
-              az storage blob upload-batch --account-name devopsb19adoartifacts --account-key $(STORAGE_ACCOUNT_KEY) --destination artifacts --source /tmp/artifacts/
-          displayName: 'Azure Upload artifacts to Azure Blob'
-          continueOnError: true
-    - stage: BuildDockerImagePushToDockerHubAndAzureACR
-      jobs:
-      - job: BuildDockerImagePushToDockerHub
-        timeoutInMinutes: 10
-        steps:
-        - checkout: none
-        - task: Docker@2
-          inputs:
-            containerRegistry: 'devopsb19-dockerhub-connection'
-            repository: 'hemakumardev/devopsb19ado'
-            command: 'buildAndPush'
-            Dockerfile: '**/Dockerfile'
-          displayName: 'Creating & Pushing Docker Image To Docker HUB'
-          continueOnError: true
-      - job: BuildImagePushToAzureACR
-        dependsOn: BuildDockerImagePushToDockerHub
-        timeoutInMinutes: 10
-        steps:
-        - checkout: none
-        - task: Bash@3
-          inputs:
-            targetType: 'inline'
-            script:
-              echo "Logging in to Docker Hub..."
-              docker login -u devopsb19 -p $(acrpassword) devopsb19.azurecr.io
-              echo "Tagging Docker image..."
-              docker tag hemakumar/devopsb19:$(Build.BuildId) devopsb19.azurecr.io/devopsb19:$(Build.BuildId)
-              echo "Pushing Docker image to Azure Container Registry..."
-              docker push devopsb19.azurecr.io/devopsb19:$(Build.BuildId)
-          displayName: 'Creating & Pushing Docker Image To Azure ACR'
+    
 
 
     - stage: DeleteTheRepo
