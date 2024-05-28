@@ -49,9 +49,7 @@ stages:
              #Artifact is not availible for next stage.
              TargetFolder: '/tmp/artifacts'
              OverWrite: true
-          continueOnError: true          
-              
-    
+          continueOnError: true
 
 
     - stage: DeleteTheRepo
