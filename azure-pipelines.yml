@@ -6,8 +6,7 @@ pool:
     name: MyAppLinuxAgentPool
     demands:
      - DOCKER -equals YES
-     - Terraform -equals YES
-     - Packer -equals YES
+
 
 stages:
     - stage: BuildingJavaCode
